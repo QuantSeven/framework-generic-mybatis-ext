@@ -8,7 +8,6 @@ public class ExecutorFactoryBean implements FactoryBean<Object>, InitializingBea
 	private Class<?> mapperInterface;
 	private Executor executor;
 
-
 	public Class<?> getMapperInterface() {
 		return mapperInterface;
 	}

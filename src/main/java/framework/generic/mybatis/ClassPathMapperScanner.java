@@ -68,7 +68,7 @@ public class ClassPathMapperScanner extends ClassPathBeanDefinitionScanner {
 	private Class<? extends Annotation> annotationClass;
 
 	private Class<?> markerInterface;
-	
+
 	private Executor executor;
 
 	public ClassPathMapperScanner(BeanDefinitionRegistry registry) {
@@ -153,7 +153,7 @@ public class ClassPathMapperScanner extends ClassPathBeanDefinitionScanner {
 				return className.endsWith("package-info");
 			}
 		});
-		
+
 	}
 
 	/**
@@ -164,7 +164,6 @@ public class ClassPathMapperScanner extends ClassPathBeanDefinitionScanner {
 	@Override
 	public Set<BeanDefinitionHolder> doScan(String... basePackages) {
 		Set<BeanDefinitionHolder> beanDefinitions = super.doScan(basePackages);
-
 		if (beanDefinitions.isEmpty()) {
 			logger.warn("No MyBatis mapper was found in '" + Arrays.toString(basePackages) + "' package. Please check your configuration.");
 		} else {
@@ -178,11 +177,10 @@ public class ClassPathMapperScanner extends ClassPathBeanDefinitionScanner {
 				// the mapper interface is the original class of the bean
 				// but, the actual class of the bean is MapperFactoryBean
 				definition.getPropertyValues().add("mapperInterface", definition.getBeanClassName());
-				//definition.setBeanClass(ExecutorFactoryBean.class);
 				definition.setBeanClass(MapperFactoryBean.class);
+				// definition.setBeanClass(ExecutorFactoryBean.class);
 				definition.getPropertyValues().add("executor", this.executor);
 				definition.getPropertyValues().add("addToConfig", this.addToConfig);
-
 				boolean explicitFactoryUsed = false;
 				if (StringUtils.hasText(this.sqlSessionFactoryBeanName)) {
 					definition.getPropertyValues().add("sqlSessionFactory", new RuntimeBeanReference(this.sqlSessionFactoryBeanName));
