@@ -2,12 +2,13 @@ package framework.generic.mybatis;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.ibatis.binding.MapperMethod;
 import org.mybatis.spring.support.SqlSessionDaoSupport;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -43,16 +44,18 @@ public class MybatisGenericExecutor<T extends Model<PK>, PK extends Serializable
 		Object param = methodSignature.convertArgsToSqlCommandParam(paramArrayOfObject);
 		if (!FrameworkUtil.isNullOrEmpty(paramMethod.getName())) {
 			if (paramMethod.getName().startsWith(EXECUTE_INSERT)) {
-				i = getSqlSession().insert(paramClass.getName(), param);
+				i = getSqlSession().insert(paramClass.getName()+"."+paramMethod.getName(), param);
 			} else if (paramMethod.getName().startsWith(EXECUTE_UPDATE)) {
-				i = getSqlSession().update(paramMethod.getName(), param);
-			}else if (paramMethod.getName().startsWith(EXECUTE_FIND)) {
-				if(containsMappedStatementName("com.pousheng.demo.user"+"."+paramMethod.getName())){
-					
-					getSqlSession().selectOne("com.pousheng.demo.user"+"."+paramMethod.getName(), param);
-				}
-			}
+				i = getSqlSession().update(paramClass.getName()+"."+paramMethod.getName(), param);
+			} else if (Collection.class.isAssignableFrom(paramMethod.getReturnType())) {
+				return getSqlSession().selectList(paramClass.getName()+"."+paramMethod.getName(),param);
+			} else if (Map.class.isAssignableFrom(paramMethod.getReturnType())) {
+				 return  getSqlSession().selectList(paramClass.getName()+"."+paramMethod.getName(),paramArrayOfObject);
+			} else {
+				return getSqlSession().selectOne(paramClass.getName()+"."+paramMethod.getName(),param);
+			} 
 		}
+		 
 
 		return i;
 	}

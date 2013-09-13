@@ -41,7 +41,7 @@
 		<property name="typeAliasesPackage" value="**.model" />
 		<property name="configLocation" value="classpath:mybatis-config.xml" />
 		<!-- 显式指定Mapper文件位置 -->
-		<property name="mapperLocations" value="#{dataSourceProps['mapperLocations']}" />
+		<property name="mapperLocations" value="classpath*:#{props['mapperLocations']}" />
 	</bean>
 	<!-- 扫描basePackage下所有 接口 -->
 	<bean class="framework.generic.mybatis.MapperScannerConfigurer">

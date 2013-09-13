@@ -5,7 +5,11 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.DeleteProvider;
 import org.apache.ibatis.annotations.InsertProvider;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.UpdateProvider;
+
+import framework.generic.mybatis.paginator.domain.PageBounds;
+import framework.generic.mybatis.paginator.domain.PageList;
 
 /**
  * MyBatis的CRUD基接口类
@@ -33,6 +37,8 @@ public abstract interface GenericDao<T extends Model<PK>, PK extends Serializabl
 	public abstract T findByPk(PK primaryKey);
 
 	public abstract List<T> findAll();
+
+	public abstract PageList<T> findByPage(Object object,PageBounds pageBounds);
 
 	public abstract T update(T entity);
 
